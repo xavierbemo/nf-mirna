@@ -12,7 +12,7 @@
 
 process UNTAR {
     
-    tag "${archive}"
+    tag "${index_path.baseName}"
     label "process_single"
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -20,31 +20,29 @@ process UNTAR {
         'nf-core/ubuntu:22.04' }"
 
     input:
-    tuple val(meta), path(archive)
+    tuple val(meta), path(index_path)
 
     output:
-    tuple val(meta), path("$prefix"), emit: untar
+    tuple val(meta), path("bowtie_index"), emit: untar
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def prefix = task.ext.prefix ?: ( meta.id ? "${meta.id}" : 
-        archive.baseName.toString().replaceFirst(/\.tar.gz$/, ""))
     """
-    mkdir $prefix
+    mkdir bowtie_index
 
-    if [[ \$(tar -taf ${archive} | grep -o -P "^.*?\\/" | uniq | wc -l) -eq 1 ]]; then
+    if [[ \$(tar -taf ${index_path} | grep -o -P "^.*?\\/" | uniq | wc -l) -eq 1 ]]; then
         tar \\
-            -C $prefix --strip-components 1 \\
-            -xavf \\
-            $archive
-
+            -xazvf \\
+            $index_path \\
+            -C bowtie_index \\
+            --strip-components 1
     else
         tar \\
-            -C $prefix \\
-            -xavf \\
-            $archive
+            -xazvf \\
+            $index_path \\
+            -C bowtie_index
     fi
     """
 }
