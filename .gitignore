@@ -1,0 +1,6 @@
+.nextflow/
+.nextflow.log*
+work/
+clean.sh
+results/
+data/genome_index/

@@ -1,0 +1,178 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "nf-mirna pipeline parameters",
+    "description": "Small RNA-Seq Best Practice Analysis Pipeline.",
+    "type": "object",
+    "$defs": {
+        "institutional_config_options": {
+            "title": "Institutional config options",
+            "type": "object",
+            "fa_icon": "fas fa-university",
+            "description": "Parameters used to describe centralised config profiles. These should not be edited.",
+            "help_text": "The centralised nf-core configuration profiles use a handful of pipeline parameters to describe themselves. This information is then printed to the Nextflow log when you run a pipeline. You should not need to change these values when you run a pipeline.",
+            "properties": {
+                "config_profile_name": {
+                    "type": "string",
+                    "description": "Institutional config name.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_description": {
+                    "type": "string",
+                    "description": "Institutional config description.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_contact": {
+                    "type": "string",
+                    "description": "Institutional config contact information.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                }
+            }
+        },
+        "input_output_options": {
+            "title": "Input/output options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Define where the pipeline should find input data and save output data.",
+            "required": ["input", "outdir"],
+            "properties": {
+                "input": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "schema": "assets/schema_input.json",
+                    "mimetype": "text/csv",
+                    "pattern": "^\\S+\\.csv$",
+                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
+                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/smrnaseq/usage#samplesheet-input).",
+                    "fa_icon": "fas fa-file-csv"
+                },
+                "outdir": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
+                    "fa_icon": "fas fa-folder-open",
+                    "default": "./results"
+                },
+                "save_intermediates": {
+                    "type": "boolean",
+                    "description": "Save all intermediate files (e.g. fastq, bams) of all steps of the pipeline  to output directory",
+                    "fa_icon": "fas fa-save",
+                    "default": false
+                }
+            }
+        },
+        "mirtrace_options": {
+            "title": "miRTrace QC options",
+            "type": "object",
+            "description": "Switches to skip specific pipeline steps, if desired.",
+            "fa_icon": "fas fa-fast-forward",
+            "properties": {
+                "mirtrace_protocol": {
+                    "type": "string",
+                    "description": "Protocol to use for miRTrace QC.",
+                    "default": "illumina",
+                    "enum": ["illumina", "nextflex"],
+                    "help_text": "One of the following (read structure schematic in parens): illumina (miRNA--3'-adapter--index), nextflex (NNNN--miRNA--NNNN--3'-adapter--index)."
+                },
+                "mirtrace_species": {
+                    "type": "string",
+                    "description": "Species to use for miRTrace QC, see `mirtrace --list-species` for available options.",
+                    "default": "hsa"
+                },
+                "three_prime_adapter": {
+                    "type": "string",
+                    "description": "3' adapter sequence to use for miRTrace QC.",
+                    "help_text": "The 3' adapter sequence to use for miRTrace QC. Defaults to the Illumina TruSeq Small RNA 3' adapter sequence."
+                },
+                "mirtrace_title": {
+                    "type": "string",
+                    "description": "Custom title for miRTrace report."
+                },
+                "mirtrace_comment": {
+                    "type": "string",
+                    "description": "Custom description for miRTrace report."
+                }
+            }        
+        },
+        "alignment_options": {
+            "title": "Alignment options (mature and genomic)",
+            "type": "object",
+            "description": "Options for aligning reads to the genome and mature miRNAs.",
+            "fa_icon": "fas fa-align-justify",
+            "properties": {
+                "mature": {
+                    "type": "string",
+                    "description": "Path to FASTA file with mature miRNAs.",
+                    "fa_icon": "fas fa-address-book",
+                    "help_text": "Typically this will be the `mature.fa` file from miRBase. Can be given either as a plain text `.fa` file or a compressed `.gz` file.\n\nDefaults to the current miRBase release URL, from which the file will be downloaded.",
+                    "default": "https://www.mirbase.org/download/mature.fa"
+                },
+                "mirna_gtf": {
+                    "type": "string",
+                    "description": "Path to GTF file with miRNA genomic coordinates.",
+                    "fa_icon": "fas fa-address-book",
+                    "help_text": "miRBase `.gff3` file, typically downloaded from [`https://www.mirbase.org/download/`](https://mirbase.org/download/)."
+                },
+                "genome_index": {
+                    "type": "string",
+                    "description": "Path to the genome bowtie index.",
+                    "help_text": "Path to the genome index. This should either be a directory containing the genome index files generated by `bowtie-build` or its `.tar.gz` compressed version.",
+                    "fa_icon": "fas fa-database"
+                },
+                "genome": {
+                    "type": "string",
+                    "description": "Path to the genome FASTA file (only if no genome index is provided).",
+                    "help_text": "Path to the genome FASTA file. If a genome index is not provided, an index will be generated using this file.",
+                    "fa_icon": "fas fa-database"
+                }
+            }
+        },
+        "skipping_pipeline_steps": {
+            "title": "Skipping pipeline steps",
+            "type": "object",
+            "description": "Switches to skip specific pipeline steps, if desired.",
+            "fa_icon": "fas fa-fast-forward",
+            "properties": {
+                "skip_fastqc": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip FastQC"
+                },
+                "skip_genome": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip genome alignment"
+                },
+                "skip_mirdeep": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip miRDeep"
+                },
+                "skip_multiqc": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip MultiQC"
+                }
+            }
+        },
+        "generic_options": {
+            "title": "Generic options",
+            "type": "object",
+            "fa_icon": "fas fa-file-import",
+            "description": "Less common options for the pipeline, typically set in a config file.",
+            "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
+            "properties": {
+                "validate_params": {
+                    "type": "boolean",
+                    "description": "Boolean whether to validate parameters against the schema at runtime",
+                    "default": true,
+                    "fa_icon": "fas fa-check-square",
+                    "hidden": true
+                }
+            }
+        }
+    }
+}
