@@ -2,5 +2,5 @@
 .nextflow.log*
 work/
 clean.sh
-results/
+results*
 data/genome_index/
