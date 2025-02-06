@@ -16,6 +16,7 @@
 */
 include { UNTAR } from '../modules/untar.nf'
 include { BOWTIE_INDEX as GENOME_INDEX } from '../modules/bowtie_index.nf'
+include { BIOAWK as CLEAN_GENOME } from '../modules/bioawk.nf'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -26,13 +27,26 @@ include { BOWTIE_INDEX as GENOME_INDEX } from '../modules/bowtie_index.nf'
 workflow PREPARE_GENOME {
 
     take:
-    val_genome_index    // file or directory: /path/to/bowtie/ or /path/to/bowtie.tar.gz
     val_genome          // file: /path/to/genome.fasta
+    val_genome_index    // file or directory: /path/to/bowtie/ or /path/to/bowtie.tar.gz
 
     main:
 
-    if (val_genome_index.endsWith(".tar.gz")) {
-        // If the index is a tar.gz file, handle it like a compressed archive
+    // Prepare and clean genome reference
+    ch_genome = Channel.fromPath( val_genome, checkIfExists: true )
+            .map{ it -> [ [id:it.baseName], it ] }.collect()
+    
+    ch_genome_ref = CLEAN_GENOME( ch_genome )
+
+    // If no genome index is provided, generate a new index from the genome file
+    if ( !val_genome_index ) { 
+        
+        GENOME_INDEX( ch_genome )
+        ch_genome_index = GENOME_INDEX.out.index
+    
+    // If the index is a tar.gz file, handle it like a compressed archive
+    } else if ( val_genome_index && val_genome_index.endsWith(".tar.gz") ) {
+        
         ch_genome_index = Channel.fromPath( val_genome_index, checkIfExists: true )
             .map{ it -> 
                 def id = it.baseName.toString().replaceFirst(/\.tar(\.gz)?$/, "")
@@ -40,13 +54,16 @@ workflow PREPARE_GENOME {
             }.collect()
         
         UNTAR( ch_genome_index )
+        
         ch_genome_index = UNTAR.out.untar
             .map{ meta, index_dir ->
                 def index_prefix = extractFirstIndexPrefix(index_dir)
                 return [[id:index_prefix], index_dir]
             }
+    
+    // If the index is a directory (not compressed), process the files inside it directly
     } else {
-        // If the index is a directory (not compressed), process the files inside it directly
+        
         ch_genome_index = Channel.fromPath( val_genome_index, checkIfExists: true, type: 'dir' )
             .map{ index_dir ->
                 // List the files inside the directory
@@ -60,16 +77,9 @@ workflow PREPARE_GENOME {
             }
     }
 
-    if (val_genome && !val_genome_index) {
-        // If no genome index is provided, generate a new index from the genome file
-        ch_genome = Channel.fromPath( val_genome, checkIfExists: true )
-            .map{ it -> [ [id:it.baseName], it ] }.collect() 
-        GENOME_INDEX( ch_genome )
-        ch_genome_index = BOWTIE_INDEX.out.index
-    }
-
     emit:
-    index = ch_genome_index // channel: [ val(meta), path(index) ]
+    genome_ref  = ch_genome_ref     // channel: [ val(meta), path(genome) ] 
+    index       = ch_genome_index   // channel: [ val(meta), path(index) ]
 }
 
 // Extract prefix from Bowtie index files
