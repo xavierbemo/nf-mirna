@@ -40,9 +40,6 @@ workflow {
     if ( params.validate_params ) { validateInputParameters() }
     
     // Read samplesheet and create a tuple with sample_id and fastq file
-    // ch_samplesheet = Channel.fromPath( params.input )
-    //     .splitCsv(header: true)
-    //     .map { row -> tuple(row.sample, file(row.fastq)) }
     ch_samplesheet = Channel
         .fromList( samplesheetToList(params.input, "${projectDir}/assets/schema_input.json") )
         .map {
@@ -64,12 +61,17 @@ workflow {
 
     // Clean mature miRNA reference and create index
     PREPARE_MIRNA( params.mature )
+    
     ch_mature_ref = PREPARE_MIRNA.out.fasta
     ch_mature_index = PREPARE_MIRNA.out.index
 
     // Prepare or create genome index
     if ( !params.skip_genome || !params.skip_mirdeep ) {
-        ch_genome_index = PREPARE_GENOME( params.genome_index, params.genome )
+        
+        PREPARE_GENOME( params.genome, params.genome_index )
+        
+        ch_genome_ref = PREPARE_GENOME.out.genome_ref
+        ch_genome_index = PREPARE_GENOME.out.index
     }
 
     // FastQC process using the meta (sample_id) and FASTQ file
@@ -94,24 +96,31 @@ workflow {
             }
         
         GENOME_ALIGNMENT( ch_mature_alignment.fasta, ch_genome_index )
+        
         ch_genome_counts = GENOME_ALIGNMENT.out.bam.combine( ch_mirna_gtf ) 
         GENOME_COUNTS( ch_genome_counts )
     }
 
     // miRDeep2 module
     if ( !params.skip_mirdeep ) {
-        NOVEL_MIRNA( ch_mirtrace.fasta, ch_genome_index, ch_mature_ref, params.genome, params.hairpin )
+        NOVEL_MIRNA( 
+            ch_mirtrace.fasta, 
+            ch_genome_ref, 
+            ch_genome_index, 
+            ch_mature_ref, 
+            params.hairpin 
+        )
     }
 
     // MultiQC module
-    if (!params.skip_multiqc) {
+    if ( !params.skip_multiqc ) {
 
         ch_multiqc_config  = Channel
             .fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
         
         ch_multiqc_files = Channel.empty()
 
-        if (!params.skip_fastqc) {
+        if ( !params.skip_fastqc ) {
             ch_multiqc_files = FASTQC.out.zip.map { it[1] ?: [] }
         }
         ch_multiqc_files = ch_multiqc_files.mix( MIRTRACE_QC.out.html.map { it[1] ?: [] } )
@@ -121,7 +130,7 @@ workflow {
         ch_multiqc_files = ch_multiqc_files.mix( MATURE_ALIGNMENT.out.stats.map { it[1] ?: [] } )
         ch_multiqc_files = ch_multiqc_files.mix( MATURE_ALIGNMENT.out.flagstats.map { it[1] ?: [] } )
         
-        if (!params.skip_genome) {
+        if ( !params.skip_genome ) {
             ch_multiqc_files = ch_multiqc_files.mix( GENOME_ALIGNMENT.out.out.map { it[1] ?: [] } )
             ch_multiqc_files = ch_multiqc_files.mix( GENOME_ALIGNMENT.out.stats.map { it[1] ?: [] } )
             ch_multiqc_files = ch_multiqc_files.mix( GENOME_ALIGNMENT.out.flagstats.map { it[1] ?: [] } )
@@ -151,16 +160,16 @@ def validateInputParameters() {
     if ( !params.mature ) {
         error("Mature miRNA fasta file not found. Please specify using the `--mature` parameter.")
     }
-    if ( params.skip_genome && params.skip_mirdeep && !params.genome_index && !params.genome ) {
+    if ( !params.skip_genome && !params.skip_mirdeep && !params.genome_index && !params.genome ) {
         error("No genome index or FASTA was provided. Please either specify a path to a genome index or a genome FASTA file or skip the genome alignment with `--skip_genome true`.")
     }
-    if ( params.skip_genome && !params.mirna_gtf ) {
+    if ( !params.skip_genome && !params.mirna_gtf ) {
         error("No miRNA GTF file was provided. Please either specify a path to a GTF file or skip the genome alignment with `--skip_genome true`.")
     }
-    // if ( !params.skip_mirdeep && params.hairpin ) {
-    //     error("No hairpin miRNA fasta file was provided. Please either specify a path to a hairpin miRNA FASTA file or skip the miRDeep2 module with `--skip_mirdeep true`.")
-    // }
-    if ( params.skip_mirdeep && !params.genome ) {
+    if ( !params.skip_mirdeep && !params.hairpin ) {
+        error("No hairpin miRNA fasta file was provided. Please either specify a path to a hairpin miRNA FASTA file or skip the miRDeep2 module with `--skip_mirdeep true`.")
+    }
+    if ( !params.skip_mirdeep && !params.genome ) {
         error("No genome FASTA file was provided. Please either specify a path to a genome FASTA file or skip the miRDeep2 module with `--skip_mirdeep true`.")
     }
 }
