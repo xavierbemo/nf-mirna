@@ -65,9 +65,8 @@ workflow NOVEL_MIRNA {
     )
 
     emit:
-    arf   = MIRDEEP2_MAPPER.out.arf     // channel: [ val(meta), path(arf) ]
-    fasta = MIRDEEP2_MAPPER.out.fasta   // channel: [ val(meta), path(fasta) ]
     bed   = MIRDEEP2_MIRDEEP2.out.bed   // channel: [ val(meta), path(bed) ]
     csv   = MIRDEEP2_MIRDEEP2.out.csv   // channel: [ val(meta), path(csv) ]
     html  = MIRDEEP2_MIRDEEP2.out.html  // channel: [ val(meta), path(html) ]  
+    other = MIRDEEP2_MIRDEEP2.out.other // channel: [ val(meta), path(other) ]
 }

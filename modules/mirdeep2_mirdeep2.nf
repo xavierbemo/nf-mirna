@@ -29,10 +29,11 @@ process MIRDEEP2_MIRDEEP2 {
 
     output:
     // tuple val(meta), path("result*.{bed,csv,html}"), emit: outputs
-    tuple val(meta), path("*.log"), emit: log
-    tuple val(meta), path("*.bed"), emit: bed
-    tuple val(meta), path("*.csv"), emit: csv
-    tuple val(meta), path("*.html"), emit: html
+    tuple val(meta), path("*_mirdeep2.log"), emit: log
+    tuple val(meta), path("*_mirdeep2.bed"), emit: bed
+    tuple val(meta), path("*_mirdeep2.csv"), emit: csv
+    tuple val(meta), path("*_mirdeep2.html"), emit: html
+    tuple val(meta), path("miRNAs_expressed_all_samples.csv"), emit: other
 
     script:
     """
@@ -46,8 +47,9 @@ process MIRDEEP2_MIRDEEP2 {
         -v -d -P \\
         2> >(tee ${meta.id}_mirdeep2.log >&2)
 
-    mv *.bed ${meta.id}_mirdeep2.bed
-    mv *.csv ${meta.id}_mirdeep2.csv
-    mv *.html ${meta.id}_mirdeep2.html
+    mv miRNAs_expressed_all_samples*.csv miRNAs_expressed_all_samples.csv
+    mv result_*.bed ${meta.id}_mirdeep2.bed
+    mv result_*.csv ${meta.id}_mirdeep2.csv
+    mv result_*.html ${meta.id}_mirdeep2.html
     """ 
 }
