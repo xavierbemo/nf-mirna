@@ -23,6 +23,7 @@ include { ALIGNMENT as GENOME_ALIGNMENT } from './subworkflows/alignment.nf'
 include { SAMTOOLS_INDEX } from './modules/samtools_index.nf'
 include { SAMTOOLS_IDXSTATS as MATURE_COUNTS } from './modules/samtools_idxstats.nf'
 include { HTSEQ_COUNT as GENOME_COUNTS } from './modules/htseq.nf'
+include { NOVEL_MIRNA } from './subworkflows/novel_mirnas_mirdeep.nf'
 include { MULTIQC } from './modules/multiqc.nf'
 
 /*
@@ -43,7 +44,7 @@ workflow {
     //     .splitCsv(header: true)
     //     .map { row -> tuple(row.sample, file(row.fastq)) }
     ch_samplesheet = Channel
-        .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+        .fromList( samplesheetToList(params.input, "${projectDir}/assets/schema_input.json") )
         .map {
             meta, fastq_1, fastq_2 ->
                 if (!fastq_2) {
@@ -62,15 +63,17 @@ workflow {
         }
 
     // Clean mature miRNA reference and create index
-    ch_mature_index = PREPARE_MIRNA( params.mature )
+    PREPARE_MIRNA( params.mature )
+    ch_mature_ref = PREPARE_MIRNA.out.fasta
+    ch_mature_index = PREPARE_MIRNA.out.index
 
     // Prepare or create genome index
-    if (!params.skip_genome) {
+    if ( !params.skip_genome || !params.skip_mirdeep ) {
         ch_genome_index = PREPARE_GENOME( params.genome_index, params.genome )
     }
 
     // FastQC process using the meta (sample_id) and FASTQ file
-    if (!params.skip_fastqc) {
+    if ( !params.skip_fastqc ) {
         FASTQC( ch_samplesheet )
     }
 
@@ -82,7 +85,7 @@ workflow {
     MATURE_COUNTS( ch_mature_alignment.bam )
 
     // Genome alignment using unmapped reads from mature miRNA alignment
-    if (!params.skip_genome) {
+    if ( !params.skip_genome ) {
         
         ch_mirna_gtf = Channel.fromPath( params.mirna_gtf, checkIfExists: true )
             .map{ gtf ->
@@ -93,6 +96,11 @@ workflow {
         GENOME_ALIGNMENT( ch_mature_alignment.fasta, ch_genome_index )
         ch_genome_counts = GENOME_ALIGNMENT.out.bam.combine( ch_mirna_gtf ) 
         GENOME_COUNTS( ch_genome_counts )
+    }
+
+    // miRDeep2 module
+    if ( !params.skip_mirdeep ) {
+        NOVEL_MIRNA( ch_mirtrace.fasta, ch_genome_index, ch_mature_ref, params.genome, params.hairpin )
     }
 
     // MultiQC module
@@ -137,17 +145,23 @@ workflow {
 //
 def validateInputParameters() {
 
-    if (!params.mirtrace_species) {
+    if ( !params.mirtrace_species ) {
         error("Reference species for miRTrace is not defined via the `--mirtrace_species` parameter.")
     }
-    if (!params.mature) {
+    if ( !params.mature ) {
         error("Mature miRNA fasta file not found. Please specify using the `--mature` parameter.")
     }
-    if (params.skip_genome  && !params.genome_index && !params.genome ) {
+    if ( params.skip_genome && params.skip_mirdeep && !params.genome_index && !params.genome ) {
         error("No genome index or FASTA was provided. Please either specify a path to a genome index or a genome FASTA file or skip the genome alignment with `--skip_genome true`.")
     }
-    if (params.skip_genome && !params.mirna_gtf ) {
+    if ( params.skip_genome && !params.mirna_gtf ) {
         error("No miRNA GTF file was provided. Please either specify a path to a GTF file or skip the genome alignment with `--skip_genome true`.")
+    }
+    // if ( !params.skip_mirdeep && params.hairpin ) {
+    //     error("No hairpin miRNA fasta file was provided. Please either specify a path to a hairpin miRNA FASTA file or skip the miRDeep2 module with `--skip_mirdeep true`.")
+    // }
+    if ( params.skip_mirdeep && !params.genome ) {
+        error("No genome FASTA file was provided. Please either specify a path to a genome FASTA file or skip the miRDeep2 module with `--skip_mirdeep true`.")
     }
 }
 

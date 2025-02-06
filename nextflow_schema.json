@@ -110,6 +110,13 @@
                     "help_text": "Typically this will be the `mature.fa` file from miRBase. Can be given either as a plain text `.fa` file or a compressed `.gz` file.\n\nDefaults to the current miRBase release URL, from which the file will be downloaded.",
                     "default": "https://www.mirbase.org/download/mature.fa"
                 },
+                "hairpin": {
+                    "type": "string",
+                    "description": "Path to FASTA file with miRNAs precursors.",
+                    "fa_icon": "fab fa-cuttlefish",
+                    "help_text": "Typically this will be the `mature.fa` file from miRBase. Can be given either as a plain text `.fa` file or a compressed `.gz` file.\n\nDefaults to the current miRBase release URL, from which the file will be downloaded.",
+                    "default": "https://www.mirbase.org/download/hairpin.fa"
+                },
                 "mirna_gtf": {
                     "type": "string",
                     "description": "Path to GTF file with miRNA genomic coordinates.",
@@ -124,8 +131,8 @@
                 },
                 "genome": {
                     "type": "string",
-                    "description": "Path to the genome FASTA file (only if no genome index is provided).",
-                    "help_text": "Path to the genome FASTA file. If a genome index is not provided, an index will be generated using this file.",
+                    "description": "Path to the genome FASTA file. Will be used to create a genome index if none is provided and to run the miRDeep2 module.",
+                    "help_text": "Path to the genome FASTA file. If a genome index is not provided, an index will be generated using this file. If both a genomic index and a FASTA are provided, pipeline will fail if the genome index was not created using the same FASTA genomic file.",
                     "fa_icon": "fas fa-database"
                 }
             }
