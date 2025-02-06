@@ -12,6 +12,7 @@
 process BIOAWK {
 
     tag "${meta.id}"
+    label "process_single"
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/bioawk:1.0--h5bf99c6_6':
@@ -42,5 +43,4 @@ process BIOAWK {
 
     mv \${FASTA}.clean \$(basename \${FASTA} .fa).clean.fa  
     """
-
 }

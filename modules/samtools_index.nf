@@ -12,7 +12,7 @@
 process SAMTOOLS_INDEX {
 
     tag "${meta.id}"
-    label "process_medium"
+    label "process_low"
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/samtools:1.21--h50ea8bc_0' :
