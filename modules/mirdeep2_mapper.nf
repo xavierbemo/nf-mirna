@@ -12,7 +12,7 @@
 process MIRDEEP2_MAPPER {
 
     tag "${meta.id}"
-    label "process_high"
+    label "process_medium"
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/mirdeep2:2.0.1.2--0':
@@ -26,7 +26,6 @@ process MIRDEEP2_MAPPER {
     output:
     tuple val(meta), path("*.arf"), emit: arf
     tuple val(meta), path("*.genome.mirdeep.fa"), emit: fasta
-    // tuple val(meta), path("*.genome.mirdeep.fa.gz"), emit: fasta
 
     script:
     """
@@ -39,7 +38,5 @@ process MIRDEEP2_MAPPER {
         -p \$INDEX_PREFIX \\
         -s ${meta.id}.genome.mirdeep.fa \\
         -t ${meta.id}.genome.mirdeep.arf
-
-    #gzip ${meta.id}.genome.mirdeep.fa
     """
 }

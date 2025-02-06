@@ -36,24 +36,24 @@ workflow NOVEL_MIRNA {
 
     main:
 
-    // Clean reads
-    ch_cleaned_reads = CLEAN_FASTA( ch_mirtrace_fasta )
-
     // Prepare and clean miRNA hairpin reference
     ch_hairpin = Channel.fromPath( val_hairpin, checkIfExists: true )
         .map{ it -> [ [id:it.baseName], it ] }.collect()
     ch_hairpin_ref = CLEAN_HAIRPIN( ch_hairpin )
+
+    // Prepare and clean genome reference
+    ch_genome = Channel.fromPath( val_genome, checkIfExists: true )
+        .map{ it -> [ [id:it.baseName], it ] }.collect()
+    ch_genome_ref = CLEAN_GENOME( ch_genome )
+    
+    // Clean reads
+    ch_cleaned_reads = CLEAN_FASTA( ch_mirtrace_fasta )
 
     // Map reads
     ch_mirdeep_input = ch_cleaned_reads.combine( ch_genome_index )
     MIRDEEP2_MAPPER( ch_mirdeep_input )
     ch_mirdeep_fasta = MIRDEEP2_MAPPER.out.fasta
     ch_mirdeep_arf = MIRDEEP2_MAPPER.out.arf
-
-    // Prepare and clean genome reference
-    ch_genome = Channel.fromPath( val_genome, checkIfExists: true )
-        .map{ it -> [ [id:it.baseName], it ] }.collect()
-    ch_genome_ref = CLEAN_GENOME( ch_genome )
     
     // miRDeep2 module
     MIRDEEP2_MIRDEEP2( 
@@ -67,4 +67,7 @@ workflow NOVEL_MIRNA {
     emit:
     arf   = MIRDEEP2_MAPPER.out.arf     // channel: [ val(meta), path(arf) ]
     fasta = MIRDEEP2_MAPPER.out.fasta   // channel: [ val(meta), path(fasta) ]
+    bed   = MIRDEEP2_MIRDEEP2.out.bed   // channel: [ val(meta), path(bed) ]
+    csv   = MIRDEEP2_MIRDEEP2.out.csv   // channel: [ val(meta), path(csv) ]
+    html  = MIRDEEP2_MIRDEEP2.out.html  // channel: [ val(meta), path(html) ]  
 }

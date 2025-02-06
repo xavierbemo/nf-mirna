@@ -28,14 +28,14 @@ process MIRDEEP2_MIRDEEP2 {
     tuple val(meta5), path(hairpin_ref)
 
     output:
-    tuple val(meta), path("result*.{bed,csv,html}"), emit: outputs
-    tuple val(meta), path("mirdeep2.log"), emit: log
+    // tuple val(meta), path("result*.{bed,csv,html}"), emit: outputs
+    tuple val(meta), path("*.log"), emit: log
+    tuple val(meta), path("*.bed"), emit: bed
+    tuple val(meta), path("*.csv"), emit: csv
+    tuple val(meta), path("*.html"), emit: html
 
     script:
     """
-    #gunzip --keep $fasta
-    #UNCOMPRESSED_READS=\$( basename $fasta .gz )
-
     miRDeep2.pl \\
         $fasta \\
         $genome_fa \\
@@ -44,6 +44,10 @@ process MIRDEEP2_MIRDEEP2 {
         "none" \\
         $hairpin_ref \\
         -v -d -P \\
-        2> >(tee mirdeep2.log >&2)
+        2> >(tee ${meta.id}_mirdeep2.log >&2)
+
+    mv *.bed ${meta.id}_mirdeep2.bed
+    mv *.csv ${meta.id}_mirdeep2.csv
+    mv *.html ${meta.id}_mirdeep2.html
     """ 
 }
