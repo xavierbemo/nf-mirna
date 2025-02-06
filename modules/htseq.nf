@@ -2,7 +2,7 @@
 /**
 * HTSEQ-COUNT MODULE
 * 
-* This module runs htseq-count to quantify the genome mapped reads.
+* This module runs htseq-count to quantify genome mapped reads.
 * 
 * @author Xavier Benedicto Molina
 * @version 1.0

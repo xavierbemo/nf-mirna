@@ -21,9 +21,10 @@ process BIOAWK {
     tuple val(meta), path(fasta)
 
     output:
-    tuple val(meta), path("*_clean.fa"), emit: fasta
+    tuple val(meta), path("*.clean.fa"), emit: fasta
 
     script:
+    def args = task.ext.args ?: "print \">\"\$name\"\\n\"\$seq}'"
     """
     if [[ ${fasta} == *.gz ]]; then
         gunzip -k $fasta
@@ -36,10 +37,10 @@ process BIOAWK {
         gsub(\"U\", \"T\", \$seq); 
         gsub(/[^ATGCatgc]/, \"N\", \$seq); 
         sub(/ .*/, \"\", \$name); 
-        if (\$name ~ /^hsa/) print \">\"\$name\"\\n\"\$seq}' \\
+        $args \\
         \$FASTA > \${FASTA}.clean
 
-    mv \${FASTA}.clean \$(basename \${FASTA} .fa)_clean.fa  
+    mv \${FASTA}.clean \$(basename \${FASTA} .fa).clean.fa  
     """
 
 }

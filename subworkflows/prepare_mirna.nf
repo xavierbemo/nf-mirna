@@ -1,6 +1,6 @@
 #!/usr/bin/env nextflow
 /**
-* PREPARE MIRNA REFERENCE MODULE
+* PREPARE MIRNA REFERENCE SUBWORKFLOW
 * 
 * This subworkflow runs bioawk to clean the mature miRNA reference and then
 * creates a genome index using bowtie.
@@ -14,7 +14,7 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include { BIOAWK } from '../modules/bioawk.nf'
+include { BIOAWK as CLEAN_MATURE } from '../modules/bioawk.nf'
 include { BOWTIE_INDEX as MATURE_INDEX } from '../modules/bowtie_index.nf'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -34,11 +34,12 @@ workflow PREPARE_MIRNA {
         .map{ it -> [ [id:it.baseName], it ] }.collect()
     
     // Clean mature miRNA reference
-    ch_cleaned = BIOAWK( ch_mature_ref )
+    ch_cleaned = CLEAN_MATURE( ch_mature_ref )
     
     // Create index
     MATURE_INDEX( ch_cleaned )
     
     emit:
+    fasta = ch_cleaned.fasta         // channel: [ val(meta), path(fasta) ]
     index = MATURE_INDEX.out.index   // channel: [ val(meta), path(index) ]
 }
