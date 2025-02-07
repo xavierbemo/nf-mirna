@@ -2,6 +2,19 @@
 
 ## 1. Introduction
 
+```
+------------------------------------------------------
+
+   ▄▄▄▄  ▗▞▀▀▘  ▄▄▄▄  ▄ ▗▄▄▖ ▗▖  ▗▖ ▗▄▖ 
+   █   █ ▐▌     █ █ █ ▄ ▐▌ ▐▌▐▛▚▖▐▌▐▌ ▐▌
+   █   █ ▐▛▀▘   █   █ █ ▐▛▀▚▖▐▌ ▝▜▌▐▛▀▜▌
+         ▐▌           █ ▐▌ ▐▌▐▌  ▐▌▐▌ ▐▌
+
+  nf-mirna 0.1
+------------------------------------------------------
+```
+
+
 **nf-mirna** is a complete pipeline to process, align and analyse deep sequencing miRNA reads. This pipeline is based on the nf-core pipeline [smrnaseq](https://nf-co.re/smrnaseq/2.4.0/) v2.4.0.
 
 This pipeline is built using [Nextflow](https://www.nextflow.io/), a workflow tool to run tasks across multiple compute infrastructures. It can use Docker/Singularity making installation and results highly reproducible.
@@ -52,3 +65,9 @@ nextflow run nf-mirna \
     --mirna_gtf 'path/to/mirna.gtf' \
     --outdir <OUTDIR>
 ```
+
+If you need an extended summary of all possible parameters of the pipeline, you can do so by running `nextflow run nf-mirna --help`.
+
+## 4. Results overview
+
+
