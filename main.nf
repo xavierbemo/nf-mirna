@@ -35,7 +35,7 @@ workflow {
     
     main:
 
-    UTILS_NFSCHEMA_PLUGIN( workflow, params.validate_params, '${projectDir}/nextflow_schema.json' )
+    UTILS_NFSCHEMA_PLUGIN( workflow, params.validate_params, "${projectDir}/nextflow_schema.json" )
 
     if ( params.validate_params ) { validateInputParameters() }
     

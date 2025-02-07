@@ -1,19 +1,17 @@
 # nf-miRNA
 
-## 1. Introduction
-
 ```
 ------------------------------------------------------
 
    ▄▄▄▄  ▗▞▀▀▘  ▄▄▄▄  ▄ ▗▄▄▖ ▗▖  ▗▖ ▗▄▖ 
    █   █ ▐▌     █ █ █ ▄ ▐▌ ▐▌▐▛▚▖▐▌▐▌ ▐▌
    █   █ ▐▛▀▘   █   █ █ ▐▛▀▚▖▐▌ ▝▜▌▐▛▀▜▌
-         ▐▌           █ ▐▌ ▐▌▐▌  ▐▌▐▌ ▐▌
+         ▐▌             ▐▌ ▐▌▐▌  ▐▌▐▌ ▐▌
 
   nf-mirna 0.1
 ------------------------------------------------------
 ```
-
+## 1. Introduction
 
 **nf-mirna** is a complete pipeline to process, align and analyse deep sequencing miRNA reads. This pipeline is based on the nf-core pipeline [smrnaseq](https://nf-co.re/smrnaseq/2.4.0/) v2.4.0.
 
@@ -40,7 +38,7 @@ You can test the pipeline as follows:
 
 ```bash
 nextflow run nf-mirna \
-    -profile test,singularity \
+    -profile <test,test_genome>,singularity \
     --outdir <OUTDIR>
 ```
 

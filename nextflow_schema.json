@@ -73,7 +73,6 @@
                 "mirtrace_protocol": {
                     "type": "string",
                     "description": "Protocol to use for miRTrace QC.",
-                    "default": "illumina",
                     "enum": ["illumina", "nextflex"],
                     "help_text": "One of the following (read structure schematic in parens): illumina (miRNA--3'-adapter--index), nextflex (NNNN--miRNA--NNNN--3'-adapter--index)."
                 },
@@ -146,22 +145,26 @@
                 "skip_fastqc": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip FastQC"
+                    "description": "Skip FastQC",
+                    "default": false
                 },
                 "skip_genome": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip genome alignment"
+                    "description": "Skip genome alignment",
+                    "default": false
                 },
                 "skip_mirdeep": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip miRDeep"
+                    "description": "Skip miRDeep",
+                    "default": false
                 },
                 "skip_multiqc": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip MultiQC"
+                    "description": "Skip MultiQC",
+                    "default": false
                 }
             }
         },
