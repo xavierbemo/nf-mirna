@@ -1,0 +1,5 @@
+sample,fastq_1
+sample_1,www.github.com/xavierbemo/nf-mirna/tests/1006_S18_R1_001.fastq.gz
+sample_2,www.github.com/xavierbemo/nf-mirna/tests/1006_S18_R1_001.fastq.gz
+sample_3,www.github.com/xavierbemo/nf-mirna/tests/4025_S11_R1_001.fastq.gz
+sample_4,www.github.com/xavierbemo/nf-mirna/tests/2001_S25_R1_001.fastq.gz
