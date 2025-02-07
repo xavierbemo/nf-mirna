@@ -2,21 +2,22 @@
 
 ## 1. Introduction
 
-**nf-mirna** is a complete pipeline to process, align and analyse deep sequencing miRNA reads.
+**nf-mirna** is a complete pipeline to process, align and analyse deep sequencing miRNA reads. This pipeline is based on the nf-core pipeline [smrnaseq](https://nf-co.re/smrnaseq/2.4.0/) v2.4.0.
 
-This pipeline is built using Nextflow, a workflow tool to run tasks across multiple compute infrastructures. It can use Docker/Singularity making installation and results highly reproducible.
+This pipeline is built using [Nextflow](https://www.nextflow.io/), a workflow tool to run tasks across multiple compute infrastructures. It can use Docker/Singularity making installation and results highly reproducible.
 
 ## 2. Pipeline Summary
 
-    1. Quality check and trimming
-       i. Raw read QC (`fastqc`)
-       ii. Adapter trimming and miRNA QC (`miRTrace`)
-    2. miRNA quantification
-       i. Alignment against miRNA mature reference (`bowtie`)
-       ii. Alignment of unmapped reads to genome reference (`bowtie`) (Optional)
-    3. Novel miRNAs discovery
-       - Mapping against reference genome and novel miRNA discovery with the miRDeep2 module (`miRDeep2`) (Optional)
-    4. Summary of pipeline and QCs (`multiqc`)
+1. Quality check and trimming
+    - Raw read QC (`fastqc`)
+    - Adapter trimming, miRNA QC, and FASTQ -> FASTA conversion (`miRTrace`)
+2. miRNA quantification
+    - Alignment against miRNA mature reference (`bowtie`)
+    - Alignment of unmapped reads to genome reference (`bowtie`) (Optional)
+3. Novel miRNAs discovery
+    - Mapping against reference genome and novel miRNA discovery with the miRDeep2 module (`miRDeep2`) (Optional)
+4. Summary results and QCs (`multiqc`)
+5. Summary of pipeline execution (`nextflow`)
 
 ## 3. Usage
 
