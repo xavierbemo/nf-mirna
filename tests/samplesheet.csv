@@ -1,5 +1,5 @@
 sample,fastq_1
-sample_1,https://raw.githubusercontent.com/xavierbemo/main/nf-mirna/tests/1006_S18_R1_001.fastq.gz
-sample_2,https://raw.githubusercontent.com/xavierbemo/main/nf-mirna/tests/1006_S18_R1_001.fastq.gz
-sample_3,https://raw.githubusercontent.com/xavierbemo/main/nf-mirna/tests/4025_S11_R1_001.fastq.gz
-sample_4,https://raw.githubusercontent.com/xavierbemo/main/nf-mirna/tests/2001_S25_R1_001.fastq.gz
+sample_1,https://raw.githubusercontent.com/xavierbemo/nf-mirna/main/tests/1006_S18_R1_001.fastq.gz
+sample_2,https://raw.githubusercontent.com/xavierbemo/nf-mirna/main/tests/1006_S18_R1_001.fastq.gz
+sample_3,https://raw.githubusercontent.com/xavierbemo/nf-mirna/main/tests/4025_S11_R1_001.fastq.gz
+sample_4,https://raw.githubusercontent.com/xavierbemo/nf-mirna/main/tests/2001_S25_R1_001.fastq.gz
