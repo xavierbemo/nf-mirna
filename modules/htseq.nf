@@ -12,7 +12,7 @@
 process HTSEQ_COUNT {
 
     tag "${meta.id}"
-    label "process_high"
+    label "process_medium"
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/htseq:2.0.5--py39hd5189a5_1' :

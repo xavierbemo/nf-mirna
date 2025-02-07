@@ -14,7 +14,7 @@
 process FASTQC {
 
     tag "${meta.id}"
-    label "process_high"
+    label "process_low"
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/fastqc:0.12.1--hdfd78af_0' :
@@ -26,8 +26,8 @@ process FASTQC {
     tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("*_fastqc.html"), emit: html
-    tuple val(meta), path("*_fastqc.zip"), emit: zip
+    tuple val(meta), path("*.fastqc.html"), emit: html
+    tuple val(meta), path("*.fastqc.zip"), emit: zip
 
     script:
     // The total amount of allocated RAM by FastQC is equal to the number of threads defined (--threads) time the amount of RAM defined (--memory)
@@ -44,7 +44,7 @@ process FASTQC {
         --memory $fastqc_memory \\
         ${meta.id}.fastq.gz
 
-    mv *.html ${meta.id}_fastqc.html
-    mv *.zip ${meta.id}_fastqc.zip
+    mv *.html ${meta.id}.fastqc.html
+    mv *.zip ${meta.id}.fastqc.zip
     """
 }

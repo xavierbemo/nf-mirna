@@ -11,7 +11,7 @@
 
 process MULTIQC {
 
-    label 'process_single'
+    label 'process_low'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/multiqc:1.27--pyhdfd78af_0' :

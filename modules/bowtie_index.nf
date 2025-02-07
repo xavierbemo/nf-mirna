@@ -12,7 +12,7 @@
 process BOWTIE_INDEX {
 
     tag "${meta.id}"
-    label "process_single"
+    label "process_low"
     
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/bowtie:1.3.0--py38hed8969a_1' :
