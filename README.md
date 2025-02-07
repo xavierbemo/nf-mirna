@@ -6,7 +6,7 @@
 
 This pipeline is built using [Nextflow](https://www.nextflow.io/), a workflow tool to run tasks across multiple compute infrastructures. It can use Docker/Singularity making installation and results highly reproducible.
 
-[Pipeline flow chart](./flowchart.png)
+![Pipeline flow chart](./flowchart.png)
 
 ## 2. Pipeline Summary
 
