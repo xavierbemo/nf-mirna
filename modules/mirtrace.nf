@@ -27,6 +27,7 @@ process MIRTRACE_QC {
     tuple val(meta), path("*report.html"), emit: html
     tuple val(meta), path("*results.json"), emit: json
     tuple val(meta), path("*log"), emit: log
+    tuple val(meta), path("*tsv"), emit: stats
     tuple val(meta), path("qc_passed_reads.all.uncollapsed/*.mirtrace.fa.gz"), emit: fasta
 
     script:
