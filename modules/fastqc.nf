@@ -26,8 +26,8 @@ process FASTQC {
     tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("*.fastqc.html"), emit: html
-    tuple val(meta), path("*.fastqc.zip"), emit: zip
+    tuple val(meta), path("*.html"), emit: html
+    tuple val(meta), path("*.zip"), emit: zip
 
     script:
     // The total amount of allocated RAM by FastQC is equal to the number of threads defined (--threads) time the amount of RAM defined (--memory)
@@ -43,8 +43,5 @@ process FASTQC {
         --threads $task.cpus \\
         --memory $fastqc_memory \\
         ${meta.id}.fastq.gz
-
-    mv *.html ${meta.id}.fastqc.html
-    mv *.zip ${meta.id}.fastqc.zip
     """
 }

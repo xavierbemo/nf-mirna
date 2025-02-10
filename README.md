@@ -87,8 +87,8 @@ The directory `fastqc` will contain an output directory for every sample inputed
 
 **Output directory**: `results/fastqc/{sample.id}/`
 
-- `{sample.id}.fastqc.html`: FastQC report containing quality metrics.
-- `{sample.id}.fastqc.zip`: Zip archive containing the FastQC reports, tab-delimited data and plot images.
+- `{sample.id}_fastqc.html`: FastQC report containing quality metrics.
+- `{sample.id}_fastqc.zip`: Zip archive containing the FastQC reports, tab-delimited data and plot images.
 
 ### 4.2. miRTrace
 
