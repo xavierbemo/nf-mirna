@@ -33,7 +33,7 @@ process SAMTOOLS_IDXSTATS {
         $bam
     
     echo "mirna\tlength\tmapped_reads\tunmapped_reads" \\
-        > ${meta.id}.idxstats.tsv
+        > ${meta.id}.mature.idxstats.tsv
     
     samtools idxstats \\
         $bam \\
