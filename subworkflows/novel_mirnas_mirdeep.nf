@@ -16,6 +16,7 @@
 */
 include { BIOAWK as CLEAN_FASTA } from '../modules/bioawk.nf'
 include { BIOAWK as CLEAN_HAIRPIN } from '../modules/bioawk.nf'
+include { BIOAWK as CLEAN_OTHER } from '../modules/bioawk.nf'
 include { BIOAWK as CLEAN_GENOME } from '../modules/bioawk.nf'
 include { MIRDEEP2_MAPPER } from '../modules/mirdeep2_mapper.nf'
 include { MIRDEEP2_MIRDEEP2 } from '../modules/mirdeep2_mirdeep2.nf'
@@ -33,6 +34,7 @@ workflow NOVEL_MIRNA {
     ch_genome_index     // channel: [ val(index_meta), path(index) ]
     ch_mature_ref       // channel: [ val(meta), path(fasta) ]
     val_hairpin         // file:    /path/to/hairpin.fa
+    val_other           // file:    /path/to/other_mirna.fa
 
     main:
 
@@ -41,10 +43,16 @@ workflow NOVEL_MIRNA {
         .map{ it -> [ [id:it.baseName], it ] }.collect()
     ch_hairpin_ref = CLEAN_HAIRPIN( ch_hairpin )
 
-    // DEPRECATED: Prepare and clean genome reference
-    // ch_genome = Channel.fromPath( val_genome, checkIfExists: true )
-    //     .map{ it -> [ [id:it.baseName], it ] }.collect()
-    // ch_genome_ref = CLEAN_GENOME( ch_genome )
+    // Prepare other miRNA references for miRDeep2 if given
+    // https://nextflow-io.github.io/patterns/optional-input/
+    ch_other_ref = Channel.fromPath( "${projectDir}/assets/NO_FILE", checkIfExists: true )
+        .map{ it -> [ [id:it.baseName], it ] }.collect()
+    
+    if ( val_other ) {
+        ch_other = Channel.fromPath( val_other, checkIfExists: true )
+            .map{ it -> [ [id:it.baseName], it ] }.collect()
+        ch_other_ref = CLEAN_OTHER( ch_other )
+    }
     
     // Clean reads
     ch_cleaned_reads = CLEAN_FASTA( ch_mirtrace_fasta )
@@ -56,14 +64,15 @@ workflow NOVEL_MIRNA {
     
     ch_mirdeep_fasta = MIRDEEP2_MAPPER.out.fasta
     ch_mirdeep_arf = MIRDEEP2_MAPPER.out.arf
-    
+
     // miRDeep2 module
     MIRDEEP2_MIRDEEP2( 
         ch_mirdeep_fasta, 
         ch_mirdeep_arf, 
         ch_genome_ref, 
         ch_mature_ref, 
-        ch_hairpin_ref 
+        ch_hairpin_ref,
+        ch_other_ref
     )
 
     emit:

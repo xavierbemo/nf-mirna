@@ -103,12 +103,14 @@ workflow {
 
     // miRDeep2 module
     if ( !params.skip_mirdeep ) {
+        
         NOVEL_MIRNA( 
             ch_mirtrace.fasta, 
             ch_genome_ref, 
             ch_genome_index, 
             ch_mature_ref, 
-            params.hairpin 
+            params.hairpin,
+            params.mirdeep_mirna_other
         )
     }
 

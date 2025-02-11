@@ -136,6 +136,35 @@
                 }
             }
         },
+        "mirdeep2_options": {
+            "title": "miRDeep2 novel miRNA options",
+            "type": "object",
+            "description": "Options for the miRDeep2 module.",
+            "fa_icon": "fas fa-align-justify",
+            "properties": {
+                "mirdeep_mirna_other": {
+                    "type": "string",
+                    "description": "Path to FASTA file with other miRNAs.",
+                    "fa_icon": "fas fa-address-book",
+                    "help_text": "This file should be the pooled known mature sequences for 1-5 species closely related to the species being analyzed. Can be given either as a plain text `.fa` file or a compressed `.gz` file."
+                },
+                "mirdeep_randfold": {
+                    "type": "boolean",
+                    "description": "Whether to run miRDeep2 with randfold analysis.",
+                    "default": true
+                },
+                "mirdeep_mirbase_v18": {
+                    "type": "boolean",
+                    "description": "Whether the mature reference files contain miRBase v18 identifiers (5p and 3p) instead of previous ids from v17.",
+                    "default": true
+                },
+                "mirdeep_pdfs": {
+                    "type": "boolean",
+                    "description": "Whether to generate report PDFs.",
+                    "default": false
+                }
+            }
+        },
         "skipping_pipeline_steps": {
             "title": "Skipping pipeline steps",
             "type": "object",
