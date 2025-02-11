@@ -62,8 +62,9 @@ process MIRDEEP2_MIRDEEP2 {
     mv result_*.csv ${meta.id}_mirdeep2.csv
     mv result_*.html ${meta.id}_mirdeep2.html
 
-    if [[ -d pdfs* ]]; then
-        mv pdfs*/ ${meta.id}_mirdeep2_pdfs
+
+    if [[ -d \$(find . -name pdfs_* -type d) ]]; then
+        mv pdfs_* ${meta.id}_mirdeep2_pdfs
     fi
     """ 
 }
