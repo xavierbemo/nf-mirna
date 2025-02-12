@@ -15,8 +15,8 @@ process MIRDEEP2_MAPPER {
     label "process_low"
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mirdeep2:2.0.1.2--0':
-        'biocontainers/mirdeep2:2.0.1.2--0' }"
+        'https://depot.galaxyproject.org/singularity/mirdeep2:2.0.1.3--hdfd78af_2':
+        'biocontainers/mirdeep2:2.0.1.3--hdfd78af_2' }"
 
     // publishDir "${params.outdir}/mirdeep2/${meta.id}", mode: 'copy', overwrite: true
 
