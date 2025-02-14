@@ -5,7 +5,6 @@
 * This module runs samtools index to create the .bam indices (.bai) 
 *
 * @author Xavier Benedicto Molina
-* @version 1.0
 *
 **/
 

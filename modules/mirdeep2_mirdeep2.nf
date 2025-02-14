@@ -5,7 +5,6 @@
 * This module runs miRDeep2.pl from miRDeep2 to discover novel miRNAs.
 * 
 * @author Xavier Benedicto Molina
-* @version 1.0
 *
 **/
 

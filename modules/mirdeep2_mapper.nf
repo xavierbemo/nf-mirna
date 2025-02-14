@@ -5,7 +5,6 @@
 * This module runs mapper.pl from miRDeep2.
 * 
 * @author Xavier Benedicto Molina
-* @version 1.0
 *
 **/
 

@@ -121,9 +121,9 @@ results/
 
 ### 4.1. FastQC
 
-The directory `fastqc` will contain an output directory for every sample inputed in the pipeline (after the `sample` column in `samplesheet.csv`):
+The directory `fastqc` will contain the QC of the raw FASTQ files.
 
-**Output directory**: `results/fastqc/{sample.id}/`
+**Output directory**: `results/fastqc/`
 
 - `{sample.id}_fastqc.html`: FastQC report containing quality metrics.
 - `{sample.id}_fastqc.zip`: Zip archive containing the FastQC reports, tab-delimited data and plot images.

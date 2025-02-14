@@ -5,7 +5,6 @@
 * This module runs miRTrace QC on the input fastq files.
 * 
 * @author Xavier Benedicto Molina
-* @version 1.0
 *
 **/
 

@@ -5,7 +5,6 @@
 * This module runs samtools idxstats to quantify the resulting .bam files
 * 
 * @author Xavier Benedicto Molina
-* @version 1.0
 *
 **/
 

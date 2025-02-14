@@ -6,7 +6,6 @@
 * reads agaisnt the mature miRNA reference.
 * 
 * @author Xavier Benedicto Molina
-* @version 1.0
 *
 **/
 

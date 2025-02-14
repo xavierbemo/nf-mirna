@@ -6,7 +6,6 @@
 * Adapted from nf-core/smrnaseq UNTAR module.
 * 
 * @author Xavier Benedicto Molina
-* @version 1.0
 *
 **/
 

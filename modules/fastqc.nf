@@ -6,7 +6,6 @@
 * Adapted from nf-core/smrnaseq
 * 
 * @author Xavier Benedicto Molina
-* @version 1.0
 *
 **/
 
@@ -20,7 +19,7 @@ process FASTQC {
         'https://depot.galaxyproject.org/singularity/fastqc:0.12.1--hdfd78af_0' :
         'biocontainers/fastqc:0.12.1--hdfd78af_0' }"
 
-    publishDir "${params.outdir}/fastqc/${meta.id}/", mode: 'copy', overwrite: true
+    publishDir "${params.outdir}/fastqc/", mode: 'copy', overwrite: true
     
     input:
     tuple val(meta), path(reads)

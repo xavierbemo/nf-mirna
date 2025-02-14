@@ -5,7 +5,6 @@
 * This module runs multiqc across the pipeline.
 * 
 * @author Xavier Benedicto Molina
-* @version 1.0
 *
 **/
 

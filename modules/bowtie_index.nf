@@ -5,7 +5,6 @@
 * This module runs bowtie-index on the input fasta files.
 * 
 * @author Xavier Benedicto Molina
-* @version 1.0
 *
 **/
 

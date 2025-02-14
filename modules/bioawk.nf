@@ -5,7 +5,6 @@
 * This module runs bioawk to clean input fasta references.
 * 
 * @author Xavier Benedicto Molina
-* @version 1.0
 *
 **/
 
