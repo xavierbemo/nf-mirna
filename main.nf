@@ -128,6 +128,7 @@ workflow {
         ch_multiqc_files = ch_multiqc_files.mix( MIRTRACE_QC.out.html.map { it[1] ?: [] } )
         ch_multiqc_files = ch_multiqc_files.mix( MIRTRACE_QC.out.json.map { it[1] ?: [] } )
         ch_multiqc_files = ch_multiqc_files.mix( MIRTRACE_QC.out.log.map { it[1] ?: [] } )
+        ch_multiqc_files = ch_multiqc_files.mix( MIRTRACE_QC.out.stats.map { it[1] ?: [] } )
         ch_multiqc_files = ch_multiqc_files.mix( MATURE_ALIGNMENT.out.out.map { it[1] ?: [] } )
         ch_multiqc_files = ch_multiqc_files.mix( MATURE_ALIGNMENT.out.stats.map { it[1] ?: [] } )
         ch_multiqc_files = ch_multiqc_files.mix( MATURE_ALIGNMENT.out.flagstats.map { it[1] ?: [] } )
