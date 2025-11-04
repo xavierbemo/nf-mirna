@@ -1,6 +1,8 @@
+.vscode/
 .nextflow/
 .nextflow.log*
 work/
 clean.sh
+update_remote.sh
 results*
 data/
