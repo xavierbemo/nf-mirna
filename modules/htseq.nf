@@ -32,7 +32,8 @@ process HTSEQ_COUNT {
     htseq-count \\
         -t miRNA \\
         -f bam \\
-        -s no \\
+        -s yes \\
+        --nonunique none \\
         -i Name \\
         -n $task.cpus \\
         $bam \\

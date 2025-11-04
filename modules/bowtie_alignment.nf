@@ -26,7 +26,7 @@ process BOWTIE_ALIGN {
     output:
     tuple val(meta), path("*.bam"), emit: bam
     tuple val(meta), path("*.out"), emit: out
-    tuple val(meta), path("*_unaligned.fa.gz"), emit: fasta, optional: true
+    tuple val(meta), path("${meta.id}_unaligned*.fa.gz"), emit: fasta, optional: true
 
     script:
     def args            = task.ext.args ?: ''
@@ -49,9 +49,7 @@ process BOWTIE_ALIGN {
         -o ${meta.id}.bam \\
         ${meta.id}.bam 
 
-    if [[ -f ${meta.id}_unaligned.fa ]]; then
-        gzip ${meta.id}_unaligned.fa
-    fi
+    gzip *.fa
     
     $rename_genome
     """
